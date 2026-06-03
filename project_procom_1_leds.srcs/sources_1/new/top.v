@@ -62,6 +62,10 @@ shiftreg
 wire [NB_LEDS-1:0] connect_leds;
 wire               connect_valid;
 
+//hola comentario prueba matos
+
+
+
 //con esto es azul o verde dependiendo del valor de i_sw[3]
 assign o_led = connect_led;
 assign o_led_b = (i_sw[3]==2'b00) ? connect_leds : {NB_LEDS{1'b0}};
