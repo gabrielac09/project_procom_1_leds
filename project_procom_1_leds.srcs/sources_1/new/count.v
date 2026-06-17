@@ -64,6 +64,7 @@ module count
     always @(posedge clock) begin
         if(i_reset)begin
             counter <= {NB_COUNTER{1'b0}};
+            r_valid <= 1'b0;
         end
         else if(i_sw[0]) begin
             if(counter >= limit_counter)begin
@@ -80,6 +81,8 @@ module count
             r_valid <= r_valid;
         end
     end
+
+    assign o_valid = r_valid;
     
     //el comando para seleccionar filas es SHIFT + FLECHA ABAJO o ARRIBA
     //pero para seleccionar bloques es ALT + FLECHA ABAJO o ARRIBA

@@ -36,39 +36,86 @@ module top
      input       clock                                                                             
 );
 
+
+// Creo cable de mux para i_sw de vio o del top
+
+wire selmux;
+
+wire [NB_SW-1:0] w_sw_mux;
+wire [NB_SW-1:0] w_sw;
+assign w_sw_mux = (selmux) ? w_sw : i_sw;
+
+wire w_reset_mux;
+wire w_reset;
+assign w_reset_mux = (selmux) ? w_reset : i_reset;
+
+
+
 count
 #(
     .NB_SW       (NB_SW - 1),
     .NB_COUNTER  (NB_COUNTER)
 )
-     ucount(
-     .o_valid (connect_valid),
-     .i_sw    (i_sw[2:0]),
-     .i_reset (~i_reset),
-     .clock   (clock)                         
-    );
+ucount
+(
+    .o_valid (connect_valid),
+    .i_sw    (w_sw_mux[2:0]),
+    .i_reset (~w_reset_mux),
+    .clock   (clock)                         
+);
 
 shiftreg
 #(
     .NB_LEDS (NB_LEDS)
 )
-     ushiftreg(
-     .o_led  (connect_leds),
-     .i_valid(connect_valid),
-     .i_reset(~i_reset),
-     .clock   (clock)                         
-    );
+ushiftreg
+(
+    .o_led  (connect_leds),
+    .i_valid(connect_valid),
+    .i_reset(~w_reset_mux),
+    .clock   (clock)                         
+);
 
+ila
+u_ila(
+   .clk_0    (clock)   ,
+   .probe0_0 (w_led   ),
+   .probe1_0 (w_led_b ),
+   .probe2_0 (w_led_g )
+);
+
+vio
+u_vio
+(  .clk_0        (clock) ,
+   .probe_in0_0  (w_led   ) ,
+   .probe_in1_0  (w_led_b ) ,
+   .probe_in2_0  (w_led_g ) ,
+   .probe_out0_0 (selmux) ,
+   .probe_out1_0 (w_reset) ,
+   .probe_out2_0 (w_sw)
+   );
+
+
+//comentario 
+   
 wire [NB_LEDS-1:0] connect_leds;
 wire               connect_valid;
 
-//hola comentario prueba matos
-
-
+wire [NB_LEDS-1:0] w_led;
+wire [NB_LEDS-1:0] w_led_b;
+wire [NB_LEDS-1:0] w_led_g;
 
 //con esto es azul o verde dependiendo del valor de i_sw[3]
-assign o_led = connect_led;
-assign o_led_b = (i_sw[3]==2'b00) ? connect_leds : {NB_LEDS{1'b0}};
-assign o_led_g = (i_sw[3]==2'b00) ? {NB_LEDS{1'b0}} : connect_leds; //este es Not del azul
+assign w_led = connect_leds;
+assign w_led_b = (w_sw_mux[3]==2'b00) ? connect_leds : {NB_LEDS{1'b0}};
+assign w_led_g = (w_sw_mux[3]==2'b00) ? {NB_LEDS{1'b0}} : connect_leds; //este es Not del azul
+
+assign o_led  = w_led  ;
+assign o_led_b= w_led_b;
+assign o_led_g= w_led_g;
+
+
+
+
 
 endmodule

@@ -22,10 +22,10 @@
 
 module shiftreg
 #(
-        parameter NB_LEDS = 3
+        parameter NB_LEDS = 4
 )
 (
-     output [NB_LEDS-1:0]   o_led  ,  
+     output [NB_LEDS - 1 :0]   o_led  ,  
 
     input                   i_valid  ,      
     input                   i_reset  ,        
@@ -34,8 +34,7 @@ module shiftreg
 
 
     // Var 
-    reg [NB_LEDS-1:0] shiftreg;
-    integer ptr;
+    reg [NB_LEDS - 1 :0] shiftreg;
 
 
     always @(posedge clock) begin
@@ -50,12 +49,14 @@ module shiftreg
         end
     end
 
+    assign o_led = shiftreg;
 
             //OP_x -> La diferencia de shiftreg[NB_LEDS-2:0] y shiftreg[NB_LEDS-2 -:NB_LEDS-1] es que el primero es un rango de bits y el segundo es una operacion de bits, el resultado es el mismo
             // shiftreg <= {shiftreg[NB_LEDS-2:0],shiftreg[NB_LEDS-1]};
             //es el mismo que shiftreg[NB_LEDS-2:0], pero con la ventaja de que si cambio el valor de NB_LEDS, no tengo que cambiar el rango de bits, ya que se ajusta automaticamente
 
             // //OP1 -> For
+            // integer ptr;
             // for(ptr=0; ptr<NB_LEDS-1; ptr=ptr+1)begin
             //     shiftreg[ptr+1] <= shiftreg[ptr];
             // end
