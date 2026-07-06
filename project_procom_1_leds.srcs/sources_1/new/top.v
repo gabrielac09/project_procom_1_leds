@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -23,7 +23,7 @@
 module top
 #(
      parameter NB_SW = 4 ,          
-     parameter NB_COUNTER = 32,
+     parameter NB_COUNTER = 16, //es 32 para que sea visible en la placa pero lo cambio para verlo en el ILA
      parameter NB_LEDS = 4
 )
 (                                                                             
@@ -49,6 +49,15 @@ wire w_reset_mux;
 wire w_reset;
 assign w_reset_mux = (selmux) ? w_reset : i_reset;
 
+
+//cable de salida de los modulos count y shiftreg  
+wire [NB_LEDS-1:0] connect_leds;
+wire               connect_valid;
+
+//cables de salida de los leds para el ILA y VIOs
+wire [NB_LEDS-1:0] w_led;
+wire [NB_LEDS-1:0] w_led_b;
+wire [NB_LEDS-1:0] w_led_g;
 
 
 count
@@ -96,14 +105,6 @@ u_vio
    );
 
 
-//comentario 
-   
-wire [NB_LEDS-1:0] connect_leds;
-wire               connect_valid;
-
-wire [NB_LEDS-1:0] w_led;
-wire [NB_LEDS-1:0] w_led_b;
-wire [NB_LEDS-1:0] w_led_g;
 
 //con esto es azul o verde dependiendo del valor de i_sw[3]
 assign w_led = connect_leds;
