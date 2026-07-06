@@ -54,7 +54,7 @@ assign w_reset_mux = (selmux) ? w_reset : i_reset;
 wire [NB_LEDS-1:0] connect_leds;
 wire               connect_valid;
 
-//cables de salida de los leds para el ILA y VIOs
+//cables de salida de los leds para el ILA y VI
 wire [NB_LEDS-1:0] w_led;
 wire [NB_LEDS-1:0] w_led_b;
 wire [NB_LEDS-1:0] w_led_g;
